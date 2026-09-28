@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIP 2026">
-<title>AIP 2026 참관 가이드</title>
+<title>AIP 2026 참관 가이드 v1.1</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-apple.png">
 <link rel="icon" href="icon-192.png">
@@ -149,6 +149,12 @@ html,body{margin:0}
 .gate{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px 16px}
 .gate .box{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
 .gate h2{font-size:22px;margin:0}
+.ver{display:inline-block;vertical-align:3px;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:1px 6px;letter-spacing:.02em}
+.tile .en{font-size:11.5px;color:var(--muted);line-height:1.3}
+.tile.hall{border-top:4px solid var(--seg)}
+.plan{overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+.plan img{display:block;width:100%;max-width:none;min-width:640px}
+@media (min-width:700px){.plan img{min-width:0}}
 .gate p{margin:0;color:var(--muted);font-size:14px}
 .gate input{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:13px 14px;font-size:16px;width:100%}
 .gate .btn{padding:13px}
@@ -160,7 +166,7 @@ html,body{margin:0}
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="titlerow">
       <div>
-        <h1>All in Print China 2026</h1>
+        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.1</span></h1>
         <p class="sub">10.12–16 · 상하이 SNIEC · 대성전산 참관팀</p>
       </div>
       <div class="who"><button class="iconbtn" id="btnMe" type="button"><span class="conn" id="conn"></span><span id="meName">이름</span></button><button class="iconbtn" id="btnSettings" type="button">설정</button></div>
@@ -184,7 +190,7 @@ html,body{margin:0}
 <div class="gate" id="gate" hidden>
   <form class="box" id="gateForm">
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <h2>AIP 2026 참관 가이드</h2>
+    <h2>AIP 2026 참관 가이드 <span class="ver">v1.1</span></h2>
     <p>이름을 입력하면 시작합니다. 등록·수정한 업체에 이름이 함께 표시돼요.</p>
     <input id="gateName" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name" required>
     <button class="btn primary" type="submit">시작하기</button>
@@ -213,17 +219,55 @@ const fb = initializeApp(firebaseConfig);
 const db = getDatabase(fb);
 const R = p => ref(db, `${ROOT}/${p}`);
 
-const DEFAULT_CONFIG = {
-  halls: ["W1","W2","W3","W4","W5","E1","E2","E3","E4","E5"].map((c,i)=>({id:"h"+(i+1), code:c, theme:""})),
-  categories: [
-    "디지털 인쇄기","잉크젯·산업용 인쇄","프리프레스·CTP","워크플로·MIS 소프트웨어","오프셋 인쇄기","플렉소·그라비어",
-    "라벨 인쇄","연포장","골판지 포장","접지·제본","재단·다이커팅","후가공·코팅·박",
-    "제함·접착","잉크·토너","용지·기재","판재·블랭킷·부품","포토북·POD 솔루션","스마트팩토리·AI·자동화"
-  ].map((n,i)=>({id:"c"+String(i+1).padStart(2,"0"), name:n}))
+const APP_VERSION = "1.1";
+const CONFIG_VERSION = "1.1";   // 이 값이 바뀌면 저장된 홀·카테고리를 아래 기본값으로 교체합니다.
+
+// 홀 색상은 공식 배치도 범례와 같습니다.
+const SEG = {
+  dig:  {c:"#D6589A", t:"디지털 인쇄·프리프레스"},
+  pack: {c:"#5AAEE0", t:"포장인쇄·후가공"},
+  label:{c:"#1F5AA0", t:"라벨·연포장·인쇄자재 및 부품"},
+  ink:  {c:"#12B5A5", t:"잉크·신소재"},
+  ai:   {c:"#1BAA4A", t:"혁신 디지털·지능화 기술"},
+  print:{c:"#9CC83B", t:"종합 인쇄"},
+  cpk:  {c:"#F08378", t:"종합 포장"}
 };
+const DEFAULT_CONFIG = {
+  version: CONFIG_VERSION,
+  halls: [
+    ["E3",SEG.ai.t,SEG.ai.c],["E4",SEG.cpk.t,SEG.cpk.c],["E5",SEG.print.t,SEG.print.c],
+    ["E6",SEG.label.t+" / "+SEG.ink.t,SEG.label.c],["E7",SEG.pack.t,SEG.pack.c],
+    ["N1",SEG.dig.t,SEG.dig.c],["N2",SEG.dig.t,SEG.dig.c],["N3",SEG.pack.t,SEG.pack.c],
+    ["N4",SEG.pack.t,SEG.pack.c],["N5",SEG.pack.t,SEG.pack.c]
+  ].map(([code,theme,color])=>({id:code, code, theme, color})),
+  categories: [
+    ["프리프레스 장비","Pre-press equipment"],
+    ["출판 소프트웨어","Publishing software"],
+    ["워크플로우/데이터 핸들링 소프트웨어","Workflow and data handling software"],
+    ["칼라 매니지먼트 시스템","Color management system"],
+    ["ERP","Enterprise resource planning"],
+    ["출력장비","Printing equipment"],
+    ["낱장 옵셋","Sheet-fed offset printing machines"],
+    ["윤전 옵셋","Web-fed offset printing machines"],
+    ["디지털 출력장비/시스템","Digital printing machines and digital printing systems"],
+    ["제본기/후가공기","Bookbinding machines and print finishing machines"],
+    ["라미네이팅 장비","Laminating machines"],
+    ["박장비","Foil stamping machines"],
+    ["재단기","Cutting machines"],
+    ["종이/소재","Paper and substrate"],
+    ["토너/잉크","Toners and inks"],
+    ["코팅/바니쉬","Coatings / varnishes"],
+    ["재본자재","Bookbinding materials"],
+    ["공간 제어 설비","Room climate & conditioning"]
+  ].map(([name,en],i)=>({id:"k"+String(i+1).padStart(2,"0"), name, en}))
+};
+// v1.0 → v1.1 전환: 이미 등록된 업체의 카테고리·홀을 새 목록으로 옮깁니다.
+const MIGRATE_CATS = { c01:["k09"], c02:["k09"], c03:["k01"], c04:["k03"], c05:["k07"], c06:["k06"], c07:["k06"], c08:["k06"],
+  c10:["k10"], c11:["k13"], c12:["k10","k12","k16"], c13:["k10"], c14:["k15"], c15:["k14"], c17:["k09"] };
+const MIGRATE_HALLS = { h8:"E3", h9:"E4", h10:"E5" };
 const SEED_EXHIBITORS = [
-  ["HP",["c01","c17"]],["Canon",["c01","c17"]],["Epson",["c02"]],["Heidelberg",["c05","c04"]],
-  ["Kodak",["c03"]],["Konica Minolta",["c01"]],["Bobst",["c11","c09"]]
+  ["HP",["k09"]],["Canon",["k09"]],["Epson",["k09"]],["Heidelberg",["k07","k03"]],
+  ["Kodak",["k01"]],["Konica Minolta",["k09"]],["Bobst",["k13"]]
 ];
 
 const ls = {
@@ -273,14 +317,14 @@ function countFor(pred){ const l=S.ex.filter(pred); return {n:l.length, must:l.f
 function tileMeta(k){ return `<span class="meta"><span>${k.must?`<span class="dot"></span>필수 ${k.must}`:""}</span><span class="count ${k.n?"":"zero"}">${k.n}곳</span></span>`; }
 
 function catGrid(){
-  const tiles = S.config.categories.map(c=>`<button class="tile" type="button" data-open="${esc(c.id)}"><span class="nm">${esc(c.name)}</span>${tileMeta(countFor(e=>e.cats.includes(c.id)))}</button>`).join("");
+  const tiles = S.config.categories.map(c=>`<button class="tile" type="button" data-open="${esc(c.id)}"><span class="nm">${esc(c.name)}</span>${c.en?`<span class="en">${esc(c.en)}</span>`:""}${tileMeta(countFor(e=>e.cats.includes(c.id)))}</button>`).join("");
   return `<div class="sectionhead"><h2>카테고리 ${S.config.categories.length}개</h2><span class="sub">관심 업체 ${S.ex.length}곳</span></div><div class="grid">${tiles}</div>`;
 }
 function hallGrid(){
   const un = countFor(e=>!hallById(e.hall));
-  const tiles = S.config.halls.map(h=>`<button class="tile" type="button" data-open="${esc(h.id)}"><span class="hallcode">${esc(h.code)}</span>${h.theme?`<span class="halltheme">${esc(h.theme)}</span>`:""}${tileMeta(countFor(e=>e.hall===h.id))}</button>`).join("");
+  const tiles = S.config.halls.map(h=>`<button class="tile hall" type="button" data-open="${esc(h.id)}" style="--seg:${esc(h.color||"var(--line)")}"><span class="hallcode">${esc(h.code)}</span>${h.theme?`<span class="halltheme">${esc(h.theme)}</span>`:""}${tileMeta(countFor(e=>e.hall===h.id))}</button>`).join("");
   const unTile = un.n ? `<button class="tile" type="button" data-open="__none"><span class="nm">홀 미정</span><span class="halltheme">위치 확인 필요</span>${tileMeta(un)}</button>` : "";
-  return `<div class="sectionhead"><h2>전시홀 ${S.config.halls.length}개</h2><span class="sub">홀을 누르면 관심 업체만 보여줍니다</span></div><div class="grid">${tiles}${unTile}</div>`;
+  return `<div class="sectionhead"><h2>전시홀 ${S.config.halls.length}개</h2><button class="back" type="button" id="btnPlan">배치도 보기</button></div><p class="sub" style="margin:-4px 0 10px">홀을 누르면 그 홀의 관심 업체만 보여줍니다</p><div class="grid">${tiles}${unTile}</div>`;
 }
 function catDetail(id){
   const c = catById(id); if(!c){ S.sel=null; return catGrid(); }
@@ -289,7 +333,7 @@ function catDetail(id){
   const groups = order.map(hid=>({hid, items:list.filter(e=>hid==="__none"?!hallById(e.hall):e.hall===hid).sort(sortByBooth)})).filter(g=>g.items.length);
   const body = groups.length ? groups.map(g=>`<div class="groupname">${g.hid==="__none"?"홀 미정":esc(hallById(g.hid).code)+" 홀"} · ${g.items.length}곳</div><div class="list">${g.items.map(cardHTML).join("")}</div>`).join("")
     : emptyHTML("이 카테고리에 등록된 업체가 아직 없습니다.",{cats:[id]});
-  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 4px">${esc(c.name)}</h2>${body}`;
+  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 6px">${esc(c.en)}</p>`:""}${body}`;
 }
 function hallDetail(id){
   const none = id==="__none", h = hallById(id);
@@ -323,8 +367,22 @@ function cardHTML(e){
 function bind(){
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ S.sel=b.dataset.open; render(); window.scrollTo(0,0); });
   document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{ S.sel=null; render(); });
+  const bp=document.getElementById("btnPlan"); if(bp) bp.onclick=openPlan;
   document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openEditor(S.ex.find(e=>e.id===b.dataset.edit)));
   document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ let p={}; try{p=JSON.parse(b.dataset.add)}catch(e){} openEditor(null,p); });
+}
+
+/* ── 배치도 ── */
+function openPlan(){
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <div class="sheet" role="dialog" aria-label="전시장 배치도">
+    <div class="grab"></div><h3>전시장 배치도 · SNIEC</h3>
+    <div class="plan"><img src="floor-plan.png?v=${APP_VERSION}" alt="상하이 신국제엑스포센터 전시홀 배치도: E3~E7, N1~N5"></div>
+    <p class="sub" style="margin:8px 0 12px">두 손가락으로 확대할 수 있어요. 입구: 1번(E1·W1 사이), 2번(W5·N1 사이), 3번(E7·N5 사이)</p>
+    <div class="actions"><span></span><button type="button" class="btn" data-close>닫기</button></div>
+  </div>`;
+  document.body.style.overflow="hidden";
+  document.querySelectorAll("#layer [data-close]").forEach(b=>b.onclick=closeLayer);
 }
 
 /* ── 업체 등록/수정 ── */
@@ -425,7 +483,7 @@ function openConfigEditor(){
       ${halls.map((h,i)=>`<div class="setrow"><input id="hc-${h.id}" data-h="${i}" data-k="code" value="${esc(h.code)}" aria-label="홀 번호"><input id="ht-${h.id}" data-h="${i}" data-k="theme" value="${esc(h.theme)}" placeholder="예: 디지털 인쇄·프리프레스" aria-label="테마"><button type="button" class="x" data-rmh="${i}" aria-label="삭제">✕</button></div>`).join("")}
       <button type="button" class="addline" id="addHall">＋ 전시홀 추가</button>
       <div class="field" style="margin-top:6px"><span class="lbl">카테고리 (${cats.length})</span></div>
-      ${cats.map((c,i)=>`<div class="setrow cat"><input id="cn-${c.id}" data-c="${i}" value="${esc(c.name)}" aria-label="카테고리 이름"><button type="button" class="x" data-rmc="${i}" aria-label="삭제">✕</button></div>`).join("")}
+      ${cats.map((c,i)=>`<div class="setrow"><input id="cn-${c.id}" data-c="${i}" data-k="name" value="${esc(c.name)}" aria-label="카테고리 이름" style="grid-column:span 1"><input id="ce-${c.id}" data-c="${i}" data-k="en" value="${esc(c.en||"")}" placeholder="English" aria-label="영문명"><button type="button" class="x" data-rmc="${i}" aria-label="삭제">✕</button></div>`).join("")}
       <button type="button" class="addline" id="addCat">＋ 카테고리 추가</button>
       <div class="field"><label for="newpw">관리자 비밀번호 변경 (비워두면 유지)</label><input id="newpw" type="password" autocomplete="new-password"></div>
       <div class="actions"><span class="sub">삭제한 홀의 업체는 ‘홀 미정’으로 표시됩니다.</span>
@@ -433,21 +491,21 @@ function openConfigEditor(){
     </form>`;
     document.querySelectorAll("#layer [data-close]").forEach(b=>b.onclick=closeLayer);
     document.querySelectorAll("[data-h]").forEach(inp=>inp.oninput=()=>{ halls[+inp.dataset.h][inp.dataset.k]=inp.value; });
-    document.querySelectorAll("[data-c]").forEach(inp=>inp.oninput=()=>{ cats[+inp.dataset.c].name=inp.value; });
+    document.querySelectorAll("[data-c]").forEach(inp=>inp.oninput=()=>{ cats[+inp.dataset.c][inp.dataset.k]=inp.value; });
     document.querySelectorAll("[data-rmh]").forEach(b=>b.onclick=()=>{ halls.splice(+b.dataset.rmh,1); draw(); });
     document.querySelectorAll("[data-rmc]").forEach(b=>b.onclick=()=>{ cats.splice(+b.dataset.rmc,1); draw(); });
     const nid=p=>p+Date.now().toString(36);
-    $("#addHall").onclick=()=>{ halls.push({id:nid("h"),code:"",theme:""}); draw(); };
-    $("#addCat").onclick=()=>{ cats.push({id:nid("c"),name:""}); draw(); };
+    $("#addHall").onclick=()=>{ halls.push({id:nid("h"),code:"",theme:"",color:""}); draw(); };
+    $("#addCat").onclick=()=>{ cats.push({id:nid("k"),name:"",en:""}); draw(); };
     $("#setForm").onsubmit=async ev=>{
       ev.preventDefault();
-      const H=halls.map(h=>({id:h.id,code:(h.code||"").trim(),theme:(h.theme||"").trim()})).filter(h=>h.code);
-      const C=cats.map(c=>({id:c.id,name:(c.name||"").trim()})).filter(c=>c.name);
+      const H=halls.map(h=>({id:h.id,code:(h.code||"").trim(),theme:(h.theme||"").trim(),color:h.color||""})).filter(h=>h.code);
+      const C=cats.map(c=>({id:c.id,name:(c.name||"").trim(),en:(c.en||"").trim()})).filter(c=>c.name);
       const e=$("#setErr");
       if(!H.length||!C.length){ e.textContent="전시홀과 카테고리를 각각 하나 이상 입력하세요."; e.hidden=false; return; }
       $("#setSave").disabled=true;
       try{
-        await set(R("config"),{halls:H,categories:C,updatedAt:new Date().toISOString(),updatedBy:S.me||""});
+        await set(R("config"),{version:CONFIG_VERSION,halls:H,categories:C,updatedAt:new Date().toISOString(),updatedBy:S.me||""});
         const np=$("#newpw").value; if(np) await set(R("adminPw"),np);
         closeLayer(); toast("설정을 저장했습니다");
       }catch(err){ $("#setSave").disabled=false; e.textContent="저장하지 못했습니다. 다시 시도하세요."; e.hidden=false; }
@@ -480,22 +538,34 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeLayer(); });
 async function init(){
   // 최초 1회: 기본 설정과 참가 확정 업체를 넣어 둡니다.
   const cfg = await get(R("config"));
-  if(!cfg.exists()){
-    await set(R("config"), {...DEFAULT_CONFIG, updatedAt:new Date().toISOString()});
-    const exSnap = await get(R("exhibitors"));
-    if(!exSnap.exists()){
-      const now=new Date().toISOString(), updates={};
+  const cur = cfg.exists() ? cfg.val() : null;
+  const exSnap = await get(R("exhibitors"));
+  const exAll = exSnap.exists() ? exSnap.val() : null;
+  const now = new Date().toISOString();
+  if(!cur || cur.version !== CONFIG_VERSION){
+    const updates = {};
+    updates[`${ROOT}/config`] = {...DEFAULT_CONFIG, updatedAt:now};
+    if(exAll){
+      Object.entries(exAll).forEach(([id,e])=>{
+        const oldCats = arr(e.cats);
+        if(oldCats.some(c=>/^c\d\d$/.test(c))){
+          const cats=[...new Set(oldCats.flatMap(c=>MIGRATE_CATS[c] || (/^k\d\d$/.test(c)?[c]:[])))];
+          updates[`${ROOT}/exhibitors/${id}/cats`] = cats;
+        }
+        if(e.hall && /^h\d+$/.test(e.hall)) updates[`${ROOT}/exhibitors/${id}/hall`] = MIGRATE_HALLS[e.hall] || "";
+      });
+    } else {
       SEED_EXHIBITORS.forEach(([name,cats])=>{
         const k=push(R("exhibitors")).key;
         updates[`${ROOT}/exhibitors/${k}`]={name,hall:"",booth:"",cats,products:"",memo:"주최측 참가 확정 발표 · 홀·부스 확인 필요",priority:"",url:"",createdAt:now,updatedAt:now,createdBy:"",updatedBy:""};
       });
-      await update(ref(db), updates);
     }
+    await update(ref(db), updates);
   }
   let gotC=false, gotE=false;
   onValue(R("config"), snap=>{
     const v=snap.val();
-    if(v) S.config={ halls:arr(v.halls).map(h=>({id:h.id,code:h.code||"",theme:h.theme||""})), categories:arr(v.categories).map(c=>({id:c.id,name:c.name||""})) };
+    if(v) S.config={ version:v.version||"", halls:arr(v.halls).map(h=>({id:h.id,code:h.code||"",theme:h.theme||"",color:h.color||""})), categories:arr(v.categories).map(c=>({id:c.id,name:c.name||"",en:c.en||""})) };
     gotC=true; S.loaded=gotC&&gotE; render();
   });
   onValue(R("exhibitors"), snap=>{
