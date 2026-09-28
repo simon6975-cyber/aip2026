@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A6BB3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AIP 2026">
+<title>AIP 2026 참관 가이드</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-apple.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --surface2:#EAEEF3; --line:#D9DFE7;
+  --ink:#141820; --muted:#5A6272; --accent:#0A6BB3; --accent-ink:#FFFFFF; --accent-soft:#DCEBF7;
+  --must:#C2185B; --must-soft:#FBE3EC; --want:#B7791F; --want-soft:#FBF0DC;
+  --ok:#2E7D4F; --shadow:0 6px 24px rgba(20,30,50,.14);
+  --c:#00A0DC; --m:#E6007E; --y:#FFE600; --k:#1A1A1A;
+  --sans:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1216; --surface:#181C22; --surface2:#222831; --line:#2E3540;
+    --ink:#E7EAEF; --muted:#9AA3B1; --accent:#4BA6EE; --accent-ink:#0B1520; --accent-soft:#16304A;
+    --must:#F06C9B; --must-soft:#3A1826; --want:#E3B25A; --want-soft:#35291A;
+    --ok:#6CC592; --shadow:0 6px 24px rgba(0,0,0,.5); --k:#E7EAEF;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1216; --surface:#181C22; --surface2:#222831; --line:#2E3540;
+  --ink:#E7EAEF; --muted:#9AA3B1; --accent:#4BA6EE; --accent-ink:#0B1520; --accent-soft:#16304A;
+  --must:#F06C9B; --must-soft:#3A1826; --want:#E3B25A; --want-soft:#35291A;
+  --ok:#6CC592; --shadow:0 6px 24px rgba(0,0,0,.5); --k:#E7EAEF;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:0 140px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);margin-inline:-16px;padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.cmyk{display:flex;height:4px;border-radius:2px;overflow:hidden;width:56px;margin-bottom:8px}
+.cmyk i{flex:1}
+.cmyk i:nth-child(1){background:var(--c)}.cmyk i:nth-child(2){background:var(--m)}.cmyk i:nth-child(3){background:var(--y)}.cmyk i:nth-child(4){background:var(--k)}
+.titlerow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{font-size:12px;color:var(--muted);margin:2px 0 0}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 11px;font-size:13px;color:var(--muted);white-space:nowrap}
+.search{margin-top:10px;position:relative}
+.search input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px 10px 36px;font-size:15px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+
+.notice{margin-top:12px;font-size:13px;color:var(--muted);background:var(--surface2);border-radius:10px;padding:10px 12px}
+.notice b{color:var(--ink)}
+
+.sectionhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:18px 0 10px}
+.sectionhead h2{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.sectionhead .back{border:0;background:none;color:var(--accent);font-weight:600;font-size:14px;padding:4px 0}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tile{display:flex;flex-direction:column;gap:6px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;min-height:76px}
+.tile:active{transform:scale(.985)}
+.tile .nm{font-weight:600;font-size:14px;line-height:1.35}
+.tile .meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;font-size:12px;color:var(--muted)}
+.count{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;font-size:13px;color:var(--ink)}
+.count.zero{color:var(--muted);opacity:.6}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--must);margin-right:4px;vertical-align:1px}
+.hallcode{font-family:var(--mono);font-weight:600;font-size:22px;letter-spacing:.02em;line-height:1}
+.halltheme{font-size:12px;color:var(--muted);line-height:1.35}
+
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 12px 12px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.card.must{border-left:3px solid var(--must)}
+.loc{grid-row:span 3;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:54px;padding-top:2px}
+.loc .h{font-family:var(--mono);font-weight:600;font-size:17px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:4px 7px;line-height:1.1}
+.loc .h.none{background:var(--surface2);color:var(--muted);font-size:12px;font-family:var(--sans)}
+.loc .b{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:4px}
+.card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card .name{font-weight:700;font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+.card .prod{font-size:14px;color:var(--ink);overflow-wrap:anywhere}
+.card .memo{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.chip{font-size:11.5px;border-radius:999px;padding:2px 8px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.pill{font-size:11px;font-weight:600;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.pill.must{background:var(--must-soft);color:var(--must)}
+.pill.want{background:var(--want-soft);color:var(--want)}
+.cardfoot{grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;font-size:12px;color:var(--muted)}
+.cardfoot a{color:var(--accent);text-decoration:none;font-weight:500}
+.edit{border:0;background:none;color:var(--accent);font-weight:600;font-size:13px;padding:2px 0}
+.empty{text-align:center;color:var(--muted);font-size:14px;padding:28px 12px;border:1px dashed var(--line);border-radius:12px}
+.empty button{margin-top:10px}
+
+.groupname{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--muted);margin:14px 0 6px}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+nav.tabs .in{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;max-width:520px}
+nav.tabs button{border:0;background:none;border-radius:10px;padding:7px 4px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:31;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:13px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:6px}
+
+.scrim{position:fixed;inset:0;background:rgba(10,15,25,.45);z-index:40}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);border-radius:18px 18px 0 0;max-height:92%;overflow-y:auto;padding:8px 16px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow)}
+@media (min-width:700px){.sheet{left:50%;transform:translateX(-50%);width:640px}}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:4px auto 10px}
+.sheet h3{font-size:17px;margin:0 0 12px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field label,.field .lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;font-size:15px;width:100%}
+.field textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pick{display:flex;flex-wrap:wrap;gap:6px}
+.pick button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--ink)}
+.pick button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.pick.pri button[data-v="must"][aria-pressed="true"]{background:var(--must);border-color:var(--must);color:#fff}
+.pick.pri button[data-v="want"][aria-pressed="true"]{background:var(--want);border-color:var(--want);color:#fff}
+.actions{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:6px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 16px;font-weight:600}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--must);border-color:var(--must-soft)}
+.btn.danger.armed{background:var(--must);color:#fff;border-color:var(--must)}
+.btn:disabled{opacity:.5}
+.err{color:var(--must);font-size:13px;margin:0 0 10px}
+.setrow{display:grid;grid-template-columns:78px 1fr 36px;gap:6px;margin-bottom:6px}
+.setrow.cat{grid-template-columns:1fr 36px}
+.setrow input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;font-size:14px;width:100%;min-width:0}
+.setrow .x{border:1px solid var(--line);background:var(--surface);border-radius:8px;color:var(--muted)}
+.addline{border:1px dashed var(--line);background:none;border-radius:8px;padding:8px;width:100%;color:var(--accent);font-weight:600;font-size:13px;margin-bottom:16px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:14px;box-shadow:var(--shadow)}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}@media (min-width:700px){.sheet{animation:none}}}
+</style>
+<style>
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px)}
+[hidden]{display:none!important}
+.who{display:flex;gap:6px;align-items:center}
+.conn{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:5px;vertical-align:1px}
+.conn.on{background:var(--ok)}
+.gate{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.gate .box{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.gate h2{font-size:22px;margin:0}
+.gate p{margin:0;color:var(--muted);font-size:14px}
+.gate input{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:13px 14px;font-size:16px;width:100%}
+.gate .btn{padding:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="titlerow">
+      <div>
+        <h1>All in Print China 2026</h1>
+        <p class="sub">10.12–16 · 상하이 SNIEC · 대성전산 참관팀</p>
+      </div>
+      <div class="who"><button class="iconbtn" id="btnMe" type="button"><span class="conn" id="conn"></span><span id="meName">이름</span></button><button class="iconbtn" id="btnSettings" type="button">설정</button></div>
+    </div>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="업체명·제품·메모 검색" autocomplete="off" aria-label="검색">
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<button class="fab" id="fab" type="button"><span aria-hidden="true">＋</span> 업체 등록</button>
+<nav class="tabs" aria-label="보기 전환"><div class="in" role="tablist">
+  <button role="tab" data-tab="cat" aria-selected="true" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>카테고리</button>
+  <button role="tab" data-tab="hall" aria-selected="false" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>전시홀</button>
+  <button role="tab" data-tab="all" aria-selected="false" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>전체 목록</button>
+</div></nav>
+<div id="layer"></div>
+
+<div class="gate" id="gate" hidden>
+  <form class="box" id="gateForm">
+    <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h2>AIP 2026 참관 가이드</h2>
+    <p>이름을 입력하면 시작합니다. 등록·수정한 업체에 이름이 함께 표시돼요.</p>
+    <input id="gateName" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name" required>
+    <button class="btn primary" type="submit">시작하기</button>
+  </form>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, update, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* ── Firebase 설정 ──
+   새 Firebase 프로젝트를 만들면 아래 값만 교체하세요. */
+const firebaseConfig = {
+  apiKey: "AIzaSyAnhodesyW_2SOly1oMAB25M1MOyfb8piA",
+  authDomain: "coffee-order-f1e1b.firebaseapp.com",
+  databaseURL: "https://coffee-order-f1e1b-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "coffee-order-f1e1b",
+  storageBucket: "coffee-order-f1e1b.firebasestorage.app",
+  messagingSenderId: "157369526558",
+  appId: "1:157369526558:web:3b9014c72055e89b45010f"
+};
+const ROOT = "aip2026";               // 데이터 저장 위치 (커피 앱 데이터와 분리)
+const DEFAULT_ADMIN_PW = "aip2026";   // 설정 변경용 초기 비밀번호
+
+const fb = initializeApp(firebaseConfig);
+const db = getDatabase(fb);
+const R = p => ref(db, `${ROOT}/${p}`);
+
+const DEFAULT_CONFIG = {
+  halls: ["W1","W2","W3","W4","W5","E1","E2","E3","E4","E5"].map((c,i)=>({id:"h"+(i+1), code:c, theme:""})),
+  categories: [
+    "디지털 인쇄기","잉크젯·산업용 인쇄","프리프레스·CTP","워크플로·MIS 소프트웨어","오프셋 인쇄기","플렉소·그라비어",
+    "라벨 인쇄","연포장","골판지 포장","접지·제본","재단·다이커팅","후가공·코팅·박",
+    "제함·접착","잉크·토너","용지·기재","판재·블랭킷·부품","포토북·POD 솔루션","스마트팩토리·AI·자동화"
+  ].map((n,i)=>({id:"c"+String(i+1).padStart(2,"0"), name:n}))
+};
+const SEED_EXHIBITORS = [
+  ["HP",["c01","c17"]],["Canon",["c01","c17"]],["Epson",["c02"]],["Heidelberg",["c05","c04"]],
+  ["Kodak",["c03"]],["Konica Minolta",["c01"]],["Bobst",["c11","c09"]]
+];
+
+const ls = {
+  get:(k,d)=>{ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+const S = { config: DEFAULT_CONFIG, ex:[], loaded:false, tab: ls.get("aip_tab","cat"), sel:null, q:"",
+            me: ls.get("aip_name",""), online:false };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const arr = v => Array.isArray(v) ? v.filter(x=>x!=null) : (v && typeof v==="object" ? Object.values(v) : []);
+const hallById = id => S.config.halls.find(h=>h.id===id);
+const catById = id => S.config.categories.find(c=>c.id===id);
+const collator = new Intl.Collator("ko",{numeric:true,sensitivity:"base"});
+
+function matchesQ(e){
+  if(!S.q) return true;
+  const q = S.q.toLowerCase();
+  const cats = e.cats.map(id=>catById(id)?.name||"").join(" ");
+  return [e.name,e.products,e.memo,e.booth,cats,hallById(e.hall)?.code,e.updatedBy].join(" ").toLowerCase().includes(q);
+}
+const prRank = x => x.priority==="must"?0:x.priority==="want"?1:2;
+const sortEx = (a,b) => prRank(a)-prRank(b) || collator.compare(a.name||"",b.name||"");
+const sortByBooth = (a,b) => collator.compare(a.booth||"~",b.booth||"~") || collator.compare(a.name||"",b.name||"");
+
+function toast(msg){
+  const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+
+/* ── 화면 그리기 ── */
+function render(){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.tab===S.tab)));
+  $("#meName").textContent = S.me || "이름";
+  $("#conn").className = "conn" + (S.online ? " on" : "");
+  const m = $("#main");
+  if(!S.loaded){ m.innerHTML='<div class="empty" style="margin-top:18px">공유 목록을 불러오는 중…</div>'; return; }
+  if(S.q){ m.innerHTML = listSection(`검색: “${esc(S.q)}”`, S.ex.filter(matchesQ).sort(sortEx), "검색 결과가 없습니다."); bind(); return; }
+  if(S.tab==="cat") m.innerHTML = S.sel ? catDetail(S.sel) : catGrid();
+  else if(S.tab==="hall") m.innerHTML = S.sel ? hallDetail(S.sel) : hallGrid();
+  else m.innerHTML = listSection("전체 관심 업체", S.ex.slice().sort(sortEx), "아직 등록된 업체가 없습니다.");
+  bind();
+}
+function countFor(pred){ const l=S.ex.filter(pred); return {n:l.length, must:l.filter(e=>e.priority==="must").length}; }
+function tileMeta(k){ return `<span class="meta"><span>${k.must?`<span class="dot"></span>필수 ${k.must}`:""}</span><span class="count ${k.n?"":"zero"}">${k.n}곳</span></span>`; }
+
+function catGrid(){
+  const tiles = S.config.categories.map(c=>`<button class="tile" type="button" data-open="${esc(c.id)}"><span class="nm">${esc(c.name)}</span>${tileMeta(countFor(e=>e.cats.includes(c.id)))}</button>`).join("");
+  return `<div class="sectionhead"><h2>카테고리 ${S.config.categories.length}개</h2><span class="sub">관심 업체 ${S.ex.length}곳</span></div><div class="grid">${tiles}</div>`;
+}
+function hallGrid(){
+  const un = countFor(e=>!hallById(e.hall));
+  const tiles = S.config.halls.map(h=>`<button class="tile" type="button" data-open="${esc(h.id)}"><span class="hallcode">${esc(h.code)}</span>${h.theme?`<span class="halltheme">${esc(h.theme)}</span>`:""}${tileMeta(countFor(e=>e.hall===h.id))}</button>`).join("");
+  const unTile = un.n ? `<button class="tile" type="button" data-open="__none"><span class="nm">홀 미정</span><span class="halltheme">위치 확인 필요</span>${tileMeta(un)}</button>` : "";
+  return `<div class="sectionhead"><h2>전시홀 ${S.config.halls.length}개</h2><span class="sub">홀을 누르면 관심 업체만 보여줍니다</span></div><div class="grid">${tiles}${unTile}</div>`;
+}
+function catDetail(id){
+  const c = catById(id); if(!c){ S.sel=null; return catGrid(); }
+  const list = S.ex.filter(e=>e.cats.includes(id));
+  const order = [...S.config.halls.map(h=>h.id),"__none"];
+  const groups = order.map(hid=>({hid, items:list.filter(e=>hid==="__none"?!hallById(e.hall):e.hall===hid).sort(sortByBooth)})).filter(g=>g.items.length);
+  const body = groups.length ? groups.map(g=>`<div class="groupname">${g.hid==="__none"?"홀 미정":esc(hallById(g.hid).code)+" 홀"} · ${g.items.length}곳</div><div class="list">${g.items.map(cardHTML).join("")}</div>`).join("")
+    : emptyHTML("이 카테고리에 등록된 업체가 아직 없습니다.",{cats:[id]});
+  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 4px">${esc(c.name)}</h2>${body}`;
+}
+function hallDetail(id){
+  const none = id==="__none", h = hallById(id);
+  if(!none && !h){ S.sel=null; return hallGrid(); }
+  const list = S.ex.filter(e=>none?!hallById(e.hall):e.hall===id).sort(sortByBooth);
+  const body = list.length ? `<div class="list">${list.map(cardHTML).join("")}</div>` : emptyHTML("이 홀에 등록된 관심 업체가 아직 없습니다.", none?{}:{hall:id});
+  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 전시홀</button><span class="sub">${list.length}곳 · 부스 번호순</span></div>
+    <h2 style="font-size:20px;margin:0 0 4px;font-family:var(--mono)">${none?"홀 미정":esc(h.code)+" 홀"}</h2>${h&&h.theme?`<p class="sub" style="margin:0 0 10px">${esc(h.theme)}</p>`:""}${body}`;
+}
+function listSection(title,list,emptyMsg){
+  return `<div class="sectionhead"><h2>${title}</h2><span class="sub">${list.length}곳</span></div>` + (list.length?`<div class="list">${list.map(cardHTML).join("")}</div>`:emptyHTML(emptyMsg,{}));
+}
+function emptyHTML(msg,preset){
+  return `<div class="empty">${esc(msg)}<br><button class="btn primary" type="button" data-add='${esc(JSON.stringify(preset||{}))}'>업체 등록</button></div>`;
+}
+function cardHTML(e){
+  const h = hallById(e.hall);
+  const cats = e.cats.map(catById).filter(Boolean).map(c=>`<span class="chip">${esc(c.name)}</span>`).join("");
+  const pri = e.priority==="must"?'<span class="pill must">필수 방문</span>':e.priority==="want"?'<span class="pill want">관심</span>':"";
+  let url=(e.url||"").trim(); if(url && !/^https?:\/\//i.test(url)) url="https://"+url;
+  return `<article class="card ${e.priority==="must"?"must":""}">
+    <div class="loc">${h?`<span class="h">${esc(h.code)}</span>`:`<span class="h none">미정</span>`}${e.booth?`<span class="b">${esc(e.booth)}</span>`:""}</div>
+    <div class="top"><span class="name">${esc(e.name)}</span>${pri}</div>
+    ${e.products?`<div class="prod">${esc(e.products)}</div>`:""}
+    ${cats?`<div class="chips">${cats}</div>`:""}
+    ${e.memo?`<div class="memo" style="grid-column:2">${esc(e.memo)}</div>`:""}
+    <div class="cardfoot"><span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">웹사이트 ↗</a>`:""}${e.updatedBy?`${url?" · ":""}${esc(e.updatedBy)}`:""}</span>
+      <button class="edit" type="button" data-edit="${esc(e.id)}">수정</button></div>
+  </article>`;
+}
+function bind(){
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ S.sel=b.dataset.open; render(); window.scrollTo(0,0); });
+  document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{ S.sel=null; render(); });
+  document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openEditor(S.ex.find(e=>e.id===b.dataset.edit)));
+  document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ let p={}; try{p=JSON.parse(b.dataset.add)}catch(e){} openEditor(null,p); });
+}
+
+/* ── 업체 등록/수정 ── */
+function closeLayer(){ $("#layer").innerHTML=""; document.body.style.overflow=""; }
+function openEditor(ex, preset){
+  preset = preset||{};
+  const d = ex ? {...ex, cats:[...ex.cats]} : {name:"",hall:preset.hall||"",booth:"",cats:preset.cats||[],products:"",memo:"",priority:"",url:""};
+  if(!ex && S.tab==="hall" && S.sel && S.sel!=="__none" && !d.hall) d.hall=S.sel;
+  if(!ex && S.tab==="cat" && S.sel && !d.cats.length) d.cats=[S.sel];
+  const hallOpts = `<option value="">홀 미정</option>` + S.config.halls.map(h=>`<option value="${esc(h.id)}" ${d.hall===h.id?"selected":""}>${esc(h.code)}${h.theme?" · "+esc(h.theme):""}</option>`).join("");
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <form class="sheet" id="exForm" role="dialog" aria-label="업체 ${ex?"수정":"등록"}">
+    <div class="grab"></div><h3>${ex?"업체 정보 수정":"관심 업체 등록"}</h3>
+    <p class="err" id="exErr" hidden></p>
+    <div class="field"><label for="f-name">업체명 *</label><input id="f-name" required maxlength="120" value="${esc(d.name)}" placeholder="예: Heidelberg"></div>
+    <div class="row2">
+      <div class="field"><label for="f-hall">전시홀</label><select id="f-hall">${hallOpts}</select></div>
+      <div class="field"><label for="f-booth">부스 번호</label><input id="f-booth" maxlength="30" value="${esc(d.booth)}" placeholder="예: W2-A01"></div>
+    </div>
+    <div class="field"><span class="lbl">카테고리 (여러 개 선택 가능)</span><div class="pick" id="f-cats">${S.config.categories.map(c=>`<button type="button" data-id="${esc(c.id)}" aria-pressed="${d.cats.includes(c.id)}">${esc(c.name)}</button>`).join("")}</div></div>
+    <div class="field"><label for="f-prod">솔루션·제품</label><textarea id="f-prod" maxlength="600" placeholder="예: Versafire LP 디지털 인쇄기, Prinect 워크플로">${esc(d.products)}</textarea></div>
+    <div class="field"><span class="lbl">우선순위</span><div class="pick pri" id="f-pri">
+      <button type="button" data-v="must" aria-pressed="${d.priority==="must"}">필수 방문</button>
+      <button type="button" data-v="want" aria-pressed="${d.priority==="want"}">관심</button>
+      <button type="button" data-v="" aria-pressed="${!d.priority}">참고</button></div></div>
+    <div class="field"><label for="f-memo">메모 (확인할 내용, 담당자 등)</label><textarea id="f-memo" maxlength="800">${esc(d.memo)}</textarea></div>
+    <div class="field"><label for="f-url">웹사이트</label><input id="f-url" maxlength="300" inputmode="url" value="${esc(d.url)}" placeholder="www.example.com"></div>
+    <div class="actions">
+      ${ex?`<button type="button" class="btn danger" id="exDel">삭제</button>`:`<span></span>`}
+      <div style="display:flex;gap:8px"><button type="button" class="btn" data-close>취소</button><button type="submit" class="btn primary" id="exSave">${ex?"저장":"등록"}</button></div>
+    </div>
+  </form>`;
+  document.body.style.overflow="hidden";
+  document.querySelectorAll("#layer [data-close]").forEach(b=>b.onclick=closeLayer);
+  document.querySelectorAll("#f-cats button").forEach(b=>b.onclick=()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true")));
+  document.querySelectorAll("#f-pri button").forEach(b=>b.onclick=()=>document.querySelectorAll("#f-pri button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))));
+  const err = m=>{ const e=$("#exErr"); e.textContent=m; e.hidden=!m; };
+  $("#exForm").onsubmit = async ev=>{
+    ev.preventDefault();
+    const name=$("#f-name").value.trim(); if(!name){ err("업체명을 입력하세요."); return; }
+    const now=new Date().toISOString();
+    const body = {
+      name, hall:$("#f-hall").value, booth:$("#f-booth").value.trim(),
+      cats:[...document.querySelectorAll("#f-cats button[aria-pressed=true]")].map(b=>b.dataset.id),
+      products:$("#f-prod").value.trim(), memo:$("#f-memo").value.trim(),
+      priority:document.querySelector("#f-pri button[aria-pressed=true]")?.dataset.v||"",
+      url:$("#f-url").value.trim(), updatedAt:now, updatedBy:S.me||"",
+      createdAt:ex?.createdAt||now, createdBy:ex?.createdBy||S.me||""
+    };
+    $("#exSave").disabled=true;
+    try{
+      if(ex) await set(R(`exhibitors/${ex.id}`), body);
+      else await set(push(R("exhibitors")), body);
+      closeLayer(); toast(ex?"저장했습니다":"등록했습니다 · 모든 팀원에게 공유됨");
+    }catch(e){ $("#exSave").disabled=false; err("저장하지 못했습니다. 인터넷 연결을 확인하고 다시 시도하세요."); }
+  };
+  if(ex){
+    const del=$("#exDel");
+    del.onclick=async()=>{
+      if(!del.classList.contains("armed")){ del.classList.add("armed"); del.textContent="한 번 더 누르면 삭제"; return; }
+      del.disabled=true;
+      try{ await remove(R(`exhibitors/${ex.id}`)); closeLayer(); toast("삭제했습니다"); }
+      catch(e){ del.disabled=false; err("삭제하지 못했습니다. 다시 시도하세요."); }
+    };
+  }
+}
+
+/* ── 설정 (관리자 비밀번호 필요) ── */
+function openSettings(){
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <form class="sheet" id="pwForm" role="dialog" aria-label="관리자 확인">
+    <div class="grab"></div><h3>전시홀·카테고리 설정</h3>
+    <p class="sub" style="margin:-6px 0 14px">설정 변경은 관리자 비밀번호가 필요합니다.</p>
+    <p class="err" id="pwErr" hidden></p>
+    <div class="field"><label for="pw">관리자 비밀번호</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <div class="actions"><span></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>취소</button><button type="submit" class="btn primary">확인</button></div></div>
+  </form>`;
+  document.body.style.overflow="hidden";
+  document.querySelectorAll("#layer [data-close]").forEach(b=>b.onclick=closeLayer);
+  setTimeout(()=>$("#pw").focus(),50);
+  $("#pwForm").onsubmit = async ev=>{
+    ev.preventDefault();
+    const snap = await get(R("adminPw"));
+    const ok = snap.exists()? snap.val() : DEFAULT_ADMIN_PW;
+    if($("#pw").value!==ok){ const e=$("#pwErr"); e.textContent="비밀번호가 틀렸습니다."; e.hidden=false; return; }
+    openConfigEditor();
+  };
+}
+function openConfigEditor(){
+  let halls = S.config.halls.map(h=>({...h})), cats = S.config.categories.map(c=>({...c}));
+  const draw=()=>{
+    $("#layer").innerHTML = `<div class="scrim" data-close></div>
+    <form class="sheet" id="setForm" role="dialog" aria-label="전시홀·카테고리 설정">
+      <div class="grab"></div><h3>전시홀·카테고리 설정</h3>
+      <p class="sub" style="margin:-6px 0 14px">공식 홀 배치도·전시 품목이 확정되면 여기서 수정하세요. 모든 팀원에게 바로 반영됩니다.</p>
+      <p class="err" id="setErr" hidden></p>
+      <div class="field"><span class="lbl">전시홀 (${halls.length}) · 홀 번호 / 주요 전시 테마</span></div>
+      ${halls.map((h,i)=>`<div class="setrow"><input id="hc-${h.id}" data-h="${i}" data-k="code" value="${esc(h.code)}" aria-label="홀 번호"><input id="ht-${h.id}" data-h="${i}" data-k="theme" value="${esc(h.theme)}" placeholder="예: 디지털 인쇄·프리프레스" aria-label="테마"><button type="button" class="x" data-rmh="${i}" aria-label="삭제">✕</button></div>`).join("")}
+      <button type="button" class="addline" id="addHall">＋ 전시홀 추가</button>
+      <div class="field" style="margin-top:6px"><span class="lbl">카테고리 (${cats.length})</span></div>
+      ${cats.map((c,i)=>`<div class="setrow cat"><input id="cn-${c.id}" data-c="${i}" value="${esc(c.name)}" aria-label="카테고리 이름"><button type="button" class="x" data-rmc="${i}" aria-label="삭제">✕</button></div>`).join("")}
+      <button type="button" class="addline" id="addCat">＋ 카테고리 추가</button>
+      <div class="field"><label for="newpw">관리자 비밀번호 변경 (비워두면 유지)</label><input id="newpw" type="password" autocomplete="new-password"></div>
+      <div class="actions"><span class="sub">삭제한 홀의 업체는 ‘홀 미정’으로 표시됩니다.</span>
+        <div style="display:flex;gap:8px"><button type="button" class="btn" data-close>취소</button><button type="submit" class="btn primary" id="setSave">저장</button></div></div>
+    </form>`;
+    document.querySelectorAll("#layer [data-close]").forEach(b=>b.onclick=closeLayer);
+    document.querySelectorAll("[data-h]").forEach(inp=>inp.oninput=()=>{ halls[+inp.dataset.h][inp.dataset.k]=inp.value; });
+    document.querySelectorAll("[data-c]").forEach(inp=>inp.oninput=()=>{ cats[+inp.dataset.c].name=inp.value; });
+    document.querySelectorAll("[data-rmh]").forEach(b=>b.onclick=()=>{ halls.splice(+b.dataset.rmh,1); draw(); });
+    document.querySelectorAll("[data-rmc]").forEach(b=>b.onclick=()=>{ cats.splice(+b.dataset.rmc,1); draw(); });
+    const nid=p=>p+Date.now().toString(36);
+    $("#addHall").onclick=()=>{ halls.push({id:nid("h"),code:"",theme:""}); draw(); };
+    $("#addCat").onclick=()=>{ cats.push({id:nid("c"),name:""}); draw(); };
+    $("#setForm").onsubmit=async ev=>{
+      ev.preventDefault();
+      const H=halls.map(h=>({id:h.id,code:(h.code||"").trim(),theme:(h.theme||"").trim()})).filter(h=>h.code);
+      const C=cats.map(c=>({id:c.id,name:(c.name||"").trim()})).filter(c=>c.name);
+      const e=$("#setErr");
+      if(!H.length||!C.length){ e.textContent="전시홀과 카테고리를 각각 하나 이상 입력하세요."; e.hidden=false; return; }
+      $("#setSave").disabled=true;
+      try{
+        await set(R("config"),{halls:H,categories:C,updatedAt:new Date().toISOString(),updatedBy:S.me||""});
+        const np=$("#newpw").value; if(np) await set(R("adminPw"),np);
+        closeLayer(); toast("설정을 저장했습니다");
+      }catch(err){ $("#setSave").disabled=false; e.textContent="저장하지 못했습니다. 다시 시도하세요."; e.hidden=false; }
+    };
+  };
+  draw();
+}
+
+/* ── 이름 입력 ── */
+function askName(){
+  $("#gate").hidden=false; $("#gateName").value=S.me||""; setTimeout(()=>$("#gateName").focus(),50);
+}
+$("#gateForm").onsubmit=ev=>{
+  ev.preventDefault();
+  const n=$("#gateName").value.trim(); if(!n) return;
+  S.me=n; ls.set("aip_name",n); $("#gate").hidden=true; render();
+};
+
+/* ── 이벤트 ── */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
+  S.tab=b.dataset.tab; S.sel=null; S.q=""; $("#q").value=""; ls.set("aip_tab",S.tab); render(); window.scrollTo(0,0);
+});
+let qt; $("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ S.q=e.target.value.trim(); render(); },120); });
+$("#fab").onclick=()=>openEditor(null,{});
+$("#btnSettings").onclick=openSettings;
+$("#btnMe").onclick=askName;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeLayer(); });
+
+/* ── Firebase 연결 ── */
+async function init(){
+  // 최초 1회: 기본 설정과 참가 확정 업체를 넣어 둡니다.
+  const cfg = await get(R("config"));
+  if(!cfg.exists()){
+    await set(R("config"), {...DEFAULT_CONFIG, updatedAt:new Date().toISOString()});
+    const exSnap = await get(R("exhibitors"));
+    if(!exSnap.exists()){
+      const now=new Date().toISOString(), updates={};
+      SEED_EXHIBITORS.forEach(([name,cats])=>{
+        const k=push(R("exhibitors")).key;
+        updates[`${ROOT}/exhibitors/${k}`]={name,hall:"",booth:"",cats,products:"",memo:"주최측 참가 확정 발표 · 홀·부스 확인 필요",priority:"",url:"",createdAt:now,updatedAt:now,createdBy:"",updatedBy:""};
+      });
+      await update(ref(db), updates);
+    }
+  }
+  let gotC=false, gotE=false;
+  onValue(R("config"), snap=>{
+    const v=snap.val();
+    if(v) S.config={ halls:arr(v.halls).map(h=>({id:h.id,code:h.code||"",theme:h.theme||""})), categories:arr(v.categories).map(c=>({id:c.id,name:c.name||""})) };
+    gotC=true; S.loaded=gotC&&gotE; render();
+  });
+  onValue(R("exhibitors"), snap=>{
+    const v=snap.val()||{};
+    S.ex = Object.entries(v).map(([id,e])=>({id,...e,cats:arr(e.cats)}));
+    gotE=true; S.loaded=gotC&&gotE; render();
+  });
+  onValue(ref(db,".info/connected"), s=>{ S.online=!!s.val(); render(); });
+}
+
+render();
+if(!S.me) askName();
+init().catch(()=>{ $("#main").innerHTML='<div class="empty" style="margin-top:18px">서버에 연결하지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침하세요.</div>'; });
+
+/* ── 서비스워커 (홈 화면 앱 + 자동 갱신) ── */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{});
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(!refreshing){ refreshing=true; location.reload(); } });
+}
+</script>
+</body>
+</html>
