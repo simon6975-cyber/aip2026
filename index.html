@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIP 2026">
-<title>AIP 2026 참관 가이드 v1.3</title>
+<title>AIP 2026 참관 가이드 v1.3.1</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-apple.png">
 <link rel="icon" href="icon-192.png">
@@ -56,12 +56,7 @@ h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balan
 .sub{font-size:12px;color:var(--muted);margin:2px 0 0}
 .iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 11px;font-size:13px;color:var(--muted);white-space:nowrap}
 .search{margin-top:10px;position:relative}
-.catbar{display:flex;gap:6px;overflow-x:auto;margin:10px -16px 0;padding:0 16px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.catbar::-webkit-scrollbar{display:none}
-.catbar button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px;white-space:nowrap}
-.catbar button .n{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:4px}
-.catbar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.catbar button[aria-pressed="true"] .n{color:var(--accent-ink);opacity:.8}
+.sectionhead.stick{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh,150px));z-index:15;background:var(--bg);margin:0 -16px 8px;padding:10px 16px;border-bottom:1px solid var(--line)}
 .search input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px 10px 36px;font-size:15px}
 .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
 
@@ -167,7 +162,7 @@ html,body{margin:0}
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="titlerow">
       <div>
-        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.3</span></h1>
+        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.3.1</span></h1>
         <p class="sub">10.12–16 · 상하이 SNIEC · 대성전산 참관팀</p>
       </div>
       <div class="who"><span class="status" id="connText"><span class="conn" id="conn"></span>연결 중</span><button class="iconbtn" id="btnSettings" type="button">설정</button></div>
@@ -176,7 +171,6 @@ html,body{margin:0}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="업체명·제품·메모 검색" autocomplete="off" aria-label="검색">
     </div>
-    <div class="catbar" id="catbar" role="toolbar" aria-label="카테고리 바로가기" hidden></div>
   </header>
   <main id="main"></main>
 </div>
@@ -211,7 +205,7 @@ const fb = initializeApp(firebaseConfig);
 const db = getDatabase(fb);
 const R = p => ref(db, `${ROOT}/${p}`);
 
-const APP_VERSION = "1.3";
+const APP_VERSION = "1.3.1";
 const CONFIG_VERSION = "1.3";   // 이 값이 바뀌면 저장된 홀·카테고리를 아래 기본값으로 교체합니다.
 
 // 홀 색상은 공식 배치도 범례와 같습니다.
@@ -302,7 +296,6 @@ function render(){
   const m = $("#main");
   if(!S.loaded){ m.innerHTML='<div class="empty" style="margin-top:18px">공유 목록을 불러오는 중…</div>'; return; }
   if(S.q){ m.innerHTML = listSection(`검색: “${esc(S.q)}”`, S.ex.filter(matchesQ).sort(sortEx), "검색 결과가 없습니다."); bind(); return; }
-  renderCatbar();
   if(S.tab==="cat") m.innerHTML = S.sel ? catDetail(S.sel) : catGrid();
   else if(S.tab==="hall") m.innerHTML = S.sel ? hallDetail(S.sel) : hallGrid();
   else m.innerHTML = listSection("전체 관심 업체", S.ex.slice().sort(sortEx), "아직 등록된 업체가 없습니다.");
@@ -328,14 +321,14 @@ function catDetail(id){
   const groups = order.map(hid=>({hid, items:list.filter(e=>hid==="__none"?!hallById(e.hall):e.hall===hid).sort(sortByBooth)})).filter(g=>g.items.length);
   const body = groups.length ? groups.map(g=>`<div class="groupname">${g.hid==="__none"?"홀 미정":esc(hallById(g.hid).code)+" 홀"} · ${g.items.length}곳</div><div class="list">${g.items.map(cardHTML).join("")}</div>`).join("")
     : emptyHTML("이 카테고리에 등록된 업체가 아직 없습니다.",{cats:[id]});
-  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 6px">${esc(c.en)}</p>`:""}${body}`;
+  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 6px">${esc(c.en)}</p>`:""}${body}`;
 }
 function hallDetail(id){
   const none = id==="__none", h = hallById(id);
   if(!none && !h){ S.sel=null; return hallGrid(); }
   const list = S.ex.filter(e=>none?!hallById(e.hall):e.hall===id).sort(sortByBooth);
   const body = list.length ? `<div class="list">${list.map(cardHTML).join("")}</div>` : emptyHTML("이 홀에 등록된 관심 업체가 아직 없습니다.", none?{}:{hall:id});
-  return `<div class="sectionhead"><button class="back" type="button" data-back>‹ 전시홀</button><span class="sub">${list.length}곳 · 부스 번호순</span></div>
+  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 전시홀</button><span class="sub">${list.length}곳 · 부스 번호순</span></div>
     <h2 style="font-size:20px;margin:0 0 4px;font-family:var(--mono)">${none?"홀 미정":esc(h.code)+" 홀"}</h2>${h&&h.theme?`<p class="sub" style="margin:0 0 10px">${esc(h.theme)}</p>`:""}${body}`;
 }
 function listSection(title,list,emptyMsg){
@@ -358,17 +351,6 @@ function cardHTML(e){
     <div class="cardfoot"><span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">웹사이트 ↗</a>`:""}</span>
       <button class="edit" type="button" data-edit="${esc(e.id)}">수정</button></div>
   </article>`;
-}
-function renderCatbar(){
-  const bar = $("#catbar");
-  const show = S.loaded && S.tab==="cat" && !S.q;
-  bar.hidden = !show;
-  if(!show) return;
-  const chip = (id,label,n)=>`<button type="button" data-chip="${esc(id)}" aria-pressed="${(S.sel||"")===id}">${esc(label)}<span class="n">${n}</span></button>`;
-  bar.innerHTML = chip("","전체",S.ex.length) + S.config.categories.map(c=>chip(c.id,c.name,S.ex.filter(e=>e.cats.includes(c.id)).length)).join("");
-  bar.querySelectorAll("[data-chip]").forEach(b=>b.onclick=()=>{ S.sel=b.dataset.chip||null; render(); window.scrollTo(0,0); });
-  const on = bar.querySelector('[aria-pressed="true"]');
-  if(on) bar.scrollLeft = on.offsetLeft - (bar.clientWidth - on.offsetWidth)/2;
 }
 function bind(){
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ S.sel=b.dataset.open; render(); window.scrollTo(0,0); });
@@ -519,6 +501,12 @@ function openConfigEditor(){
   };
   draw();
 }
+
+/* ── 상단 고정 줄 위치 (헤더 높이) ── */
+const topHeader = document.querySelector("header.top");
+const setHH = ()=>document.documentElement.style.setProperty("--hh", topHeader.offsetHeight+"px");
+setHH(); window.addEventListener("resize", setHH);
+if(window.ResizeObserver) new ResizeObserver(setHH).observe(topHeader);
 
 /* ── 이벤트 ── */
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
