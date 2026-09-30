@@ -1,4 +1,4 @@
-const CACHE = 'aip2026-v1.3.2';
+const CACHE = 'aip2026-v1.3.3';
 // 전시장 와이파이가 약해도 배치도를 볼 수 있도록 미리 저장합니다.
 const PRECACHE = ['./', './index.html', './floor-plan.png', './manifest.json',
   ...['E3','E4','E5','E6','E7','N1','N2','N3','N4','N5'].map(h => `./plans/${h}.jpg`)];

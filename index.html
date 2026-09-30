@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIP 2026">
-<title>AIP 2026 참관 가이드 v1.3.2</title>
+<title>AIP 2026 참관 가이드 v1.3.3</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-apple.png">
 <link rel="icon" href="icon-192.png">
@@ -63,7 +63,17 @@ h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balan
 .notice{margin-top:12px;font-size:13px;color:var(--muted);background:var(--surface2);border-radius:10px;padding:10px 12px}
 .notice b{color:var(--ink)}
 
-.sectionhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:18px 0 10px}
+.prisum{display:inline-flex;gap:4px;flex:none}
+.ps{font-size:11.5px;font-weight:600;border-radius:6px;padding:2px 7px;white-space:nowrap}
+.ps b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;margin-left:2px}
+.ps.must{background:var(--must-soft);color:var(--must)}
+.ps.want{background:var(--want-soft);color:var(--want)}
+.ps.ref{background:var(--surface2);color:var(--muted)}
+.subrow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:-4px 0 10px}
+.subrow .sub{margin:0;flex:1;min-width:0}
+.subrow .back{border:0;background:none;color:var(--accent);font-weight:600;font-size:14px;padding:4px 0;flex:none}
+.subrow .prisum{margin-left:auto}
+.sectionhead{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:18px 0 10px}
 .sectionhead h2{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
 .sectionhead .back{border:0;background:none;color:var(--accent);font-weight:600;font-size:14px;padding:4px 0}
 
@@ -167,7 +177,7 @@ html,body{margin:0}
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="titlerow">
       <div>
-        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.3.2</span></h1>
+        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.3.3</span></h1>
         <p class="sub">10.12–16 · 상하이 SNIEC · 대성전산 참관팀</p>
       </div>
       <div class="who"><span class="status" id="connText"><span class="conn" id="conn"></span>연결 중</span><button class="iconbtn" id="btnSettings" type="button">설정</button></div>
@@ -210,7 +220,7 @@ const fb = initializeApp(firebaseConfig);
 const db = getDatabase(fb);
 const R = p => ref(db, `${ROOT}/${p}`);
 
-const APP_VERSION = "1.3.2";
+const APP_VERSION = "1.3.3";
 const HALL_PLANS = ["E3","E4","E5","E6","E7","N1","N2","N3","N4","N5"];   // plans/<홀>.jpg
 const CONFIG_VERSION = "1.3";   // 이 값이 바뀌면 저장된 홀·카테고리를 아래 기본값으로 교체합니다.
 
@@ -307,18 +317,22 @@ function render(){
   else m.innerHTML = listSection("전체 관심 업체", S.ex.slice().sort(sortEx), "아직 등록된 업체가 없습니다.");
   bind();
 }
+function priSummary(list){
+  const n = k => list.filter(e=>(e.priority||"")===k).length;
+  return `<span class="prisum" aria-label="우선순위별 업체 수"><span class="ps must">필수 <b>${n("must")}</b></span><span class="ps want">관심 <b>${n("want")}</b></span><span class="ps ref">참고 <b>${n("")}</b></span></span>`;
+}
 function countFor(pred){ const l=S.ex.filter(pred); return {n:l.length, must:l.filter(e=>e.priority==="must").length}; }
 function tileMeta(k){ return `<span class="meta"><span>${k.must?`<span class="dot"></span>필수 ${k.must}`:""}</span><span class="count ${k.n?"":"zero"}">${k.n}곳</span></span>`; }
 
 function catGrid(){
   const tiles = S.config.categories.map(c=>`<button class="tile" type="button" data-open="${esc(c.id)}"><span class="nm">${esc(c.name)}</span>${c.en?`<span class="en">${esc(c.en)}</span>`:""}${tileMeta(countFor(e=>e.cats.includes(c.id)))}</button>`).join("");
-  return `<div class="sectionhead"><h2>카테고리 ${S.config.categories.length}개</h2><span class="sub">관심 업체 ${S.ex.length}곳</span></div><div class="grid">${tiles}</div>`;
+  return `<div class="sectionhead"><h2>카테고리 ${S.config.categories.length}개</h2>${priSummary(S.ex)}</div><p class="sub" style="margin:-4px 0 10px">관심 업체 ${S.ex.length}곳 · 여러 카테고리에 속한 업체는 각 카테고리에 모두 표시</p><div class="grid">${tiles}</div>`;
 }
 function hallGrid(){
   const un = countFor(e=>!hallById(e.hall));
   const tiles = S.config.halls.map(h=>`<button class="tile hall" type="button" data-open="${esc(h.id)}" style="--seg:${esc(h.color||"var(--line)")}"><span class="hallcode">${esc(h.code)}</span>${h.theme?`<span class="halltheme">${esc(h.theme)}</span>`:""}${tileMeta(countFor(e=>e.hall===h.id))}</button>`).join("");
   const unTile = un.n ? `<button class="tile" type="button" data-open="__none"><span class="nm">홀 미정</span><span class="halltheme">위치 확인 필요</span>${tileMeta(un)}</button>` : "";
-  return `<div class="sectionhead"><h2>전시홀 ${S.config.halls.length}개</h2><button class="back" type="button" id="btnPlan">배치도 보기</button></div><p class="sub" style="margin:-4px 0 10px">홀을 누르면 그 홀의 관심 업체만 보여줍니다</p><div class="grid">${tiles}${unTile}</div>`;
+  return `<div class="sectionhead"><h2>전시홀 ${S.config.halls.length}개</h2>${priSummary(S.ex)}</div><div class="subrow"><p class="sub">관심 업체 ${S.ex.length}곳 · 홀을 누르면 그 홀의 업체만 보여줍니다</p><button class="back" type="button" id="btnPlan">배치도 보기</button></div><div class="grid">${tiles}${unTile}</div>`;
 }
 function catDetail(id){
   const c = catById(id); if(!c){ S.sel=null; return catGrid(); }
@@ -327,7 +341,7 @@ function catDetail(id){
   const groups = order.map(hid=>({hid, items:list.filter(e=>hid==="__none"?!hallById(e.hall):e.hall===hid).sort(sortByBooth)})).filter(g=>g.items.length);
   const body = groups.length ? groups.map(g=>`<div class="groupname">${g.hid==="__none"?"홀 미정":esc(hallById(g.hid).code)+" 홀"} · ${g.items.length}곳</div><div class="list">${g.items.map(cardHTML).join("")}</div>`).join("")
     : emptyHTML("이 카테고리에 등록된 업체가 아직 없습니다.",{cats:[id]});
-  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 카테고리</button><span class="sub">${list.length}곳 · 홀별 정리</span></div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 6px">${esc(c.en)}</p>`:""}${body}`;
+  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 카테고리</button>${priSummary(list)}</div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 2px">${esc(c.en)}</p>`:""}<p class="sub" style="margin:0 0 6px">${list.length}곳 · 홀별 정리</p>${body}`;
 }
 function hallDetail(id){
   const none = id==="__none", h = hallById(id);
@@ -336,10 +350,10 @@ function hallDetail(id){
   const body = list.length ? `<div class="list">${list.map(cardHTML).join("")}</div>` : emptyHTML("이 홀에 등록된 관심 업체가 아직 없습니다.", none?{}:{hall:id});
   const hasPlan = h && HALL_PLANS.includes(h.code);
   return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 전시홀</button>${hasPlan?`<button class="planbtn" type="button" data-plan="${esc(h.code)}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>${esc(h.code)} 홀 배치도</button>`:`<span class="sub">${list.length}곳</span>`}</div>
-    <h2 style="font-size:20px;margin:0 0 4px;font-family:var(--mono)">${none?"홀 미정":esc(h.code)+" 홀"}</h2>${hasPlan?`<p class="sub" style="margin:0 0 4px">관심 업체 ${list.length}곳 · 부스 번호순</p>`:""}${h&&h.theme?`<p class="sub" style="margin:0 0 10px">${esc(h.theme)}</p>`:""}${body}`;
+    <h2 style="font-size:20px;margin:0 0 4px;font-family:var(--mono)">${none?"홀 미정":esc(h.code)+" 홀"}</h2><div class="subrow"><p class="sub">관심 업체 ${list.length}곳 · 부스 번호순</p>${priSummary(list)}</div>${h&&h.theme?`<p class="sub" style="margin:0 0 10px">${esc(h.theme)}</p>`:""}${body}`;
 }
 function listSection(title,list,emptyMsg){
-  return `<div class="sectionhead"><h2>${title}</h2><span class="sub">${list.length}곳</span></div>` + (list.length?`<div class="list">${list.map(cardHTML).join("")}</div>`:emptyHTML(emptyMsg,{}));
+  return `<div class="sectionhead"><h2>${title}</h2>${priSummary(list)}</div><p class="sub" style="margin:-4px 0 10px">${list.length}곳 · 필수 방문 → 관심 → 참고 순</p>` + (list.length?`<div class="list">${list.map(cardHTML).join("")}</div>`:emptyHTML(emptyMsg,{}));
 }
 function emptyHTML(msg,preset){
   return `<div class="empty">${esc(msg)}<br><button class="btn primary" type="button" data-add='${esc(JSON.stringify(preset||{}))}'>업체 등록</button></div>`;
