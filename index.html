@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIP 2026">
-<title>AIP 2026 참관 가이드 v1.3.3</title>
+<title>AIP 2026 참관 가이드 v1.4.0</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-apple.png">
 <link rel="icon" href="icon-192.png">
@@ -69,6 +69,30 @@ h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balan
 .ps.must{background:var(--must-soft);color:var(--must)}
 .ps.want{background:var(--want-soft);color:var(--want)}
 .ps.ref{background:var(--surface2);color:var(--muted)}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.daynum{font-family:var(--mono);font-weight:600;font-size:18px;letter-spacing:.02em;margin-right:8px}
+.daydate{font-size:14px;color:var(--muted);font-weight:500}
+.todaytag{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:2px 7px;vertical-align:2px}
+.route{display:flex;flex-direction:column;align-items:stretch;gap:4px}
+.route .tile{min-height:0;display:grid;grid-template-columns:52px 1fr auto;align-items:center;column-gap:10px;padding:10px 12px;background:var(--bg)}
+.route .tile .hallcode{font-size:20px}
+.route .tile .meta{margin:0;justify-content:flex-end;gap:10px}
+.route .tile.off{opacity:.5}
+.route .arrow{display:flex;justify-content:center;color:var(--accent);height:22px;align-items:center}
+.route .arrow svg{transform:rotate(90deg)}
+.freegroup{border:1.5px dashed var(--line);border-radius:12px;padding:8px}
+.freelabel{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px 2px}
+.freetiles{display:flex;flex-direction:column;gap:6px}
+@media (min-width:700px){
+  .route{flex-direction:row;align-items:stretch;flex-wrap:wrap}
+  .route>.tile{flex:1 1 0;min-width:120px;grid-template-columns:1fr;row-gap:4px;align-items:start}
+  .route .arrow{height:auto;width:22px}
+  .route .arrow svg{transform:none}
+  .freegroup{flex:2 1 0}
+  .freetiles .tile{grid-template-columns:44px 1fr auto}
+}
 .subrow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:-4px 0 10px}
 .subrow .sub{margin:0;flex:1;min-width:0}
 .subrow .back{border:0;background:none;color:var(--accent);font-weight:600;font-size:14px;padding:4px 0;flex:none}
@@ -114,7 +138,7 @@ h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balan
 .groupname{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--muted);margin:14px 0 6px}
 
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
-nav.tabs .in{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;max-width:520px}
+nav.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;width:100%;max-width:520px}
 nav.tabs button{border:0;background:none;border-radius:10px;padding:7px 4px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
 nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft);font-weight:600}
 .fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:31;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:13px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:6px}
@@ -177,7 +201,7 @@ html,body{margin:0}
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="titlerow">
       <div>
-        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.3.3</span></h1>
+        <h1>All in Print China 2026 <span class="ver" id="verTag">v1.4.0</span></h1>
         <p class="sub">10.12–16 · 상하이 SNIEC · 대성전산 참관팀</p>
       </div>
       <div class="who"><span class="status" id="connText"><span class="conn" id="conn"></span>연결 중</span><button class="iconbtn" id="btnSettings" type="button">설정</button></div>
@@ -195,6 +219,7 @@ html,body{margin:0}
   <button role="tab" data-tab="cat" aria-selected="true" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>카테고리</button>
   <button role="tab" data-tab="hall" aria-selected="false" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>전시홀</button>
   <button role="tab" data-tab="all" aria-selected="false" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>전체 목록</button>
+  <button role="tab" data-tab="rec" aria-selected="false" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg>추천</button>
 </div></nav>
 <div id="layer"></div>
 
@@ -220,7 +245,7 @@ const fb = initializeApp(firebaseConfig);
 const db = getDatabase(fb);
 const R = p => ref(db, `${ROOT}/${p}`);
 
-const APP_VERSION = "1.3.3";
+const APP_VERSION = "1.4.0";
 const HALL_PLANS = ["E3","E4","E5","E6","E7","N1","N2","N3","N4","N5"];   // plans/<홀>.jpg
 const CONFIG_VERSION = "1.3";   // 이 값이 바뀌면 저장된 홀·카테고리를 아래 기본값으로 교체합니다.
 
@@ -314,6 +339,7 @@ function render(){
   if(S.q){ m.innerHTML = listSection(`검색: “${esc(S.q)}”`, S.ex.filter(matchesQ).sort(sortEx), "검색 결과가 없습니다."); bind(); return; }
   if(S.tab==="cat") m.innerHTML = S.sel ? catDetail(S.sel) : catGrid();
   else if(S.tab==="hall") m.innerHTML = S.sel ? hallDetail(S.sel) : hallGrid();
+  else if(S.tab==="rec") m.innerHTML = S.sel ? hallDetail(S.sel,"추천") : recView();
   else m.innerHTML = listSection("전체 관심 업체", S.ex.slice().sort(sortEx), "아직 등록된 업체가 없습니다.");
   bind();
 }
@@ -343,14 +369,45 @@ function catDetail(id){
     : emptyHTML("이 카테고리에 등록된 업체가 아직 없습니다.",{cats:[id]});
   return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 카테고리</button>${priSummary(list)}</div><h2 style="font-size:20px;margin:0 0 2px">${esc(c.name)}</h2>${c.en?`<p class="sub" style="margin:0 0 2px">${esc(c.en)}</p>`:""}<p class="sub" style="margin:0 0 6px">${list.length}곳 · 홀별 정리</p>${body}`;
 }
-function hallDetail(id){
+function hallDetail(id, backLabel){
   const none = id==="__none", h = hallById(id);
-  if(!none && !h){ S.sel=null; return hallGrid(); }
+  if(!none && !h){ S.sel=null; return S.tab==="rec" ? recView() : hallGrid(); }
   const list = S.ex.filter(e=>none?!hallById(e.hall):e.hall===id).sort(sortByBooth);
   const body = list.length ? `<div class="list">${list.map(cardHTML).join("")}</div>` : emptyHTML("이 홀에 등록된 관심 업체가 아직 없습니다.", none?{}:{hall:id});
   const hasPlan = h && HALL_PLANS.includes(h.code);
-  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ 전시홀</button>${hasPlan?`<button class="planbtn" type="button" data-plan="${esc(h.code)}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>${esc(h.code)} 홀 배치도</button>`:`<span class="sub">${list.length}곳</span>`}</div>
+  return `<div class="sectionhead stick"><button class="back" type="button" data-back>‹ ${backLabel||"전시홀"}</button>${hasPlan?`<button class="planbtn" type="button" data-plan="${esc(h.code)}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>${esc(h.code)} 홀 배치도</button>`:`<span class="sub">${list.length}곳</span>`}</div>
     <h2 style="font-size:20px;margin:0 0 4px;font-family:var(--mono)">${none?"홀 미정":esc(h.code)+" 홀"}</h2><div class="subrow"><p class="sub">관심 업체 ${list.length}곳 · 부스 번호순</p>${priSummary(list)}</div>${h&&h.theme?`<p class="sub" style="margin:0 0 10px">${esc(h.theme)}</p>`:""}${body}`;
+}
+/* ── 추천: 날짜별 관람 순서 ── */
+const ROUTE = [
+  {day:1, date:"2026-10-13", label:"10/13 (화)", path:["E3","N3","N4"]},
+  {day:2, date:"2026-10-14", label:"10/14 (수)", path:["N3","E7","N1","N2"]},
+  {day:3, date:"2026-10-15", label:"10/15 (목)", path:["N2","E5"], free:["E4","E6","N5"]}
+];
+const hallByCode = code => S.config.halls.find(h=>h.code===code);
+function routeTile(code){
+  const h = hallByCode(code);
+  if(!h) return `<div class="tile hall off"><span class="hallcode">${esc(code)}</span><span class="halltheme">홀 정보 없음</span></div>`;
+  return `<button class="tile hall" type="button" data-open="${esc(h.id)}" style="--seg:${esc(h.color||"var(--line)")}"><span class="hallcode">${esc(h.code)}</span>${h.theme?`<span class="halltheme">${esc(h.theme)}</span>`:""}${tileMeta(countFor(e=>e.hall===h.id))}</button>`;
+}
+function recView(){
+  const now = new Date(), today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+  const arrow = '<span class="arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const days = ROUTE.map(d=>{
+    const codes = [...d.path, ...(d.free||[])];
+    const ids = codes.map(c=>hallByCode(c)?.id).filter(Boolean);
+    const list = S.ex.filter(e=>ids.includes(e.hall));
+    const isToday = d.date===today;
+    const flow = d.path.map(routeTile).join(arrow) +
+      (d.free ? arrow + `<div class="freegroup"><span class="freelabel">나머지 홀 · 순서 자유</span><div class="freetiles">${d.free.map(routeTile).join("")}</div></div>` : "");
+    return `<section class="day${isToday?" today":""}" aria-label="DAY ${d.day}">
+      <div class="dayhead"><div><span class="daynum">DAY ${d.day}</span><span class="daydate">${d.label}</span>${isToday?'<span class="todaytag">오늘</span>':""}</div>${priSummary(list)}</div>
+      <p class="sub" style="margin:0 0 10px">${codes.join(" · ")} 관심 업체 ${list.length}곳</p>
+      <div class="route">${flow}</div>
+    </section>`;
+  }).join("");
+  return `<div class="sectionhead"><h2>추천 관람 순서</h2><button class="back" type="button" id="btnPlan">배치도 보기</button></div>
+    <p class="sub" style="margin:-4px 0 12px">날짜별로 화살표 순서대로 이동하세요. 홀을 누르면 그 홀의 관심 업체를 볼 수 있어요.</p>${days}`;
 }
 function listSection(title,list,emptyMsg){
   return `<div class="sectionhead"><h2>${title}</h2>${priSummary(list)}</div><p class="sub" style="margin:-4px 0 10px">${list.length}곳 · 필수 방문 → 관심 → 참고 순</p>` + (list.length?`<div class="list">${list.map(cardHTML).join("")}</div>`:emptyHTML(emptyMsg,{}));
@@ -420,7 +477,7 @@ function closeLayer(){ $("#layer").innerHTML=""; document.body.style.overflow=""
 function openEditor(ex, preset){
   preset = preset||{};
   const d = ex ? {...ex, cats:[...ex.cats]} : {name:"",hall:preset.hall||"",booth:"",cats:preset.cats||[],products:"",memo:"",priority:"",url:""};
-  if(!ex && S.tab==="hall" && S.sel && S.sel!=="__none" && !d.hall) d.hall=S.sel;
+  if(!ex && (S.tab==="hall"||S.tab==="rec") && S.sel && S.sel!=="__none" && !d.hall) d.hall=S.sel;
   if(!ex && S.tab==="cat" && S.sel && !d.cats.length) d.cats=[S.sel];
   const hallOpts = `<option value="">홀 미정</option>` + S.config.halls.map(h=>`<option value="${esc(h.id)}" ${d.hall===h.id?"selected":""}>${esc(h.code)}${h.theme?" · "+esc(h.theme):""}</option>`).join("");
   $("#layer").innerHTML = `<div class="scrim" data-close></div>
